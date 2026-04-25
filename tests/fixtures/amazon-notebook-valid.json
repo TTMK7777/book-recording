@@ -1,0 +1,38 @@
+{
+  "source": "amazon-notebook",
+  "exported_at": "2026-04-26T12:00:00.000Z",
+  "books": [
+    {
+      "asin": "B0XXXXXXXX",
+      "title": "シン・ニホン",
+      "author": "安宅和人",
+      "cover_url": "https://m.media-amazon.com/images/I/cover-shin-nihon.jpg",
+      "highlights": [
+        {
+          "text": "データとAIによって、これまでにない速度で価値を生み出す時代に入った。",
+          "location": "位置 No.1234",
+          "color": "yellow",
+          "note": "後で深掘りする"
+        },
+        {
+          "text": "国としての勝ち筋を冷静に見極めることが重要である。",
+          "location": "位置 No.2456",
+          "color": "blue"
+        }
+      ]
+    },
+    {
+      "asin": "B0YYYYYYYY",
+      "title": "ティール組織",
+      "author": "Frédéric Laloux",
+      "cover_url": "https://m.media-amazon.com/images/I/cover-teal.jpg",
+      "highlights": [
+        {
+          "text": "進化型組織は、目的そのものを聴き取って動く。",
+          "location": "ページ 56",
+          "color": "pink"
+        }
+      ]
+    }
+  ]
+}

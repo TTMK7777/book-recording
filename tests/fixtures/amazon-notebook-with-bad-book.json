@@ -1,0 +1,25 @@
+{
+  "source": "amazon-notebook",
+  "exported_at": "2026-04-26T12:00:00.000Z",
+  "books": [
+    {
+      "asin": "B0VALIDDAT",
+      "title": "正常な書籍",
+      "highlights": [
+        {
+          "text": "これは正常なハイライト",
+          "location": "位置 No.10"
+        }
+      ]
+    },
+    {
+      "asin": "INVALID_ASIN_FORMAT",
+      "title": "ASIN形式が不正",
+      "highlights": []
+    },
+    {
+      "title": "",
+      "highlights": []
+    }
+  ]
+}
