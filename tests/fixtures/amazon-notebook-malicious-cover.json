@@ -1,0 +1,12 @@
+{
+  "source": "amazon-notebook",
+  "exported_at": "2026-04-26T12:00:00.000Z",
+  "books": [
+    {
+      "asin": "B0DATAURIP",
+      "title": "data URI ペイロードを含む書籍",
+      "cover_url": "data:text/html;base64,PHNjcmlwdD5hbGVydCgxKTwvc2NyaXB0Pg==",
+      "highlights": []
+    }
+  ]
+}
