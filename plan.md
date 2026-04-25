@@ -76,6 +76,19 @@
 - 理由: 試験対策アプリではなく読書履歴アプリとしての汎用性を優先
 - 学習進捗管理が必要なら別アプリで対応
 
+### 2026-04-26: CISO レビュー結果と対応方針
+
+- 観点: ブックマークレット/中間表現/調査ドキュメント 3点に対するセキュリティ評価
+- 評価: ⚠️ Conditionally Approved (コア設計は安全。innerText 一択・完全ローカル動作・Cookie 不参照は high-quality)
+- 対応済 (このコミットで)
+  - HIGH-1: cover_url を http(s) 限定 + 長さ 2048 制限
+  - MEDIUM-2: text/note/location/title/author の長さ上限、books/highlights 配列上限 10000
+  - LOW-1: exported_at / highlighted_at を ISO 8601 datetime 検証
+  - LOW-2: ASIN / ISBN の正規表現バリデーション
+  - LOW-3: ブックマークレットに read.amazon.* 起動ドメインチェック
+- スキップ → todo.md 「OSS 公開前の必須対応」に移管
+  - MEDIUM-1: Amazon 利用規約 DISCLAIMER の追加 (当面の本人利用範囲ではスキップ、public 化前に必ず対応)
+
 ## 独自価値の2点セット (IDEAS.md §4 から)
 
 1. **和書カバレッジ強い** (openBD / カーリル / 国会図書館)

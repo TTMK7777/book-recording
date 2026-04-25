@@ -9,6 +9,14 @@
 //       最初は「1: 現在表示中の書籍のみ」モードで構造調査してから全件取得を推奨
 
 (async () => {
+  // フェイルセーフ: read.amazon.* 以外で実行された場合は何もしない
+  if (!/^https?:\/\/read\.amazon\.(co\.jp|com)\//i.test(location.href)) {
+    alert(
+      "このブックマークレットは read.amazon.co.jp/notebook (または .com) で実行してください。",
+    );
+    return;
+  }
+
   const SOURCE = "amazon-notebook";
   const SLEEP = (ms) => new Promise((r) => setTimeout(r, ms));
   const $ = (sel, el) => (el || document).querySelector(sel);

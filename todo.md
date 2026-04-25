@@ -82,3 +82,16 @@
 - 四半期振り返り AI 生成
 - (任意) Obsidian エクスポート / MCP サーバー化
 - (外向け公開時) D-Gmail API 連携取り込みアダプタ
+
+## OSS 公開前の必須対応
+
+> 出典: 2026-04-26 CISO レビュー (MEDIUM-1) — 当面の本人利用ではスキップしているが、リポジトリを public 化する前に必ず潰すこと。
+
+- [ ] `public/bookmarklet/amazon-notebook.js` 冒頭に DISCLAIMER ブロックを追加
+  - 本人アカウントの本人データ抽出に限定
+  - Amazon 利用規約上のグレーゾーンであり自己責任
+  - アカウント停止リスク (BOT 検知)
+  - 第三者データへの使用禁止 / 取得データの再配布禁止
+- [ ] `README.md` (or `DISCLAIMER.md`) に同等の英文 DISCLAIMER を追加
+- [ ] LICENSE に MIT/Apache-2.0 + 追加 DISCLAIMER 条項を併記
+- [ ] `docs/import/amazon-notebook-investigation.md` にも法務注意書きを冒頭追加
