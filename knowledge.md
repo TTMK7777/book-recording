@@ -2,6 +2,52 @@
 
 技術判断・検証結果・知見の集積。
 
+## 2026-04-26
+
+### Vitest 4.1 + Next.js 16 / TypeScript の設定
+
+- `vitest.config.ts` で `test.environment = "node"`、`resolve.alias["@"]` を `src/` に向けるだけで Next.js プロジェクトに統合可能
+- Next.js 用に `vite-tsconfig-paths` 等は不要 (Vitest 4 はネイティブで `tsconfig.paths` を解決しないため alias を明示)
+- テストファイルは `tests/**/*.test.ts` 配置、`tsconfig.json` の `include: ["**/*.ts"]` でカバー
+- `package.json` scripts: `test: "vitest run"` / `test:watch: "vitest"` / `test:coverage: "vitest run --coverage"`
+
+### zod の `.url()` は data:/javascript: URI を弾かない
+
+- `z.string().url()` は **URL として parse 可能か**しか見ない → `data:`, `file:`, 任意 scheme が通る
+- 安全な http(s) のみ許可するには `.refine((s) => /^https?:\/\//i.test(s))` を重ねる
+- `<a href={cover_url}>` 等で href に流すと data:URI クリックで XSS 同等の被害になり得るため、validation 段階で弾くのが鉄則
+- 出典: 2026-04-26 CISO レビュー HIGH-1
+
+### zod 配列・文字列の長さ上限が DoS 対策になる
+
+- `text` フィールドに上限を入れていないと、攻撃者が数百MBのペイロードを 1ハイライトに入れて取り込ませることが可能
+- メモリ消費・DB肥大化・レンダー凍結の三重苦
+- `z.string().max(N)` / `z.array(...).max(N)` を境界 validation の標準として常設
+- 出典: 2026-04-26 CISO レビュー MEDIUM-2
+
+### `npm audit fix --force` が破壊的ダウングレードを提案するケース
+
+- drizzle-kit 0.31 の依存に esbuild < 0.24.2 (moderate) が入っているが、`fix --force` の提案は **drizzle-kit 0.18 へのダウングレード**
+- next 16 の依存に postcss < 8.5.10 が入っており、提案は **next 9 へのダウングレード**
+- どちらも完全に破壊的なので受け入れない
+- dev 環境のみの影響なので本番影響なし、上流のメジャーアップを待つ
+
+### Lenient パーサパターン (壊れた要素を skip して残りを通す)
+
+- ユーザー取り込みのような外部入力では、1件の壊れたデータで全体を reject すると UX が悪い
+- envelope (source / exported_at / books) は厳格 parse、各 books[i] は `safeParse` で個別判定
+- skip した要素は `{ bookIndex, asin?, title?, reason }` で warnings に集めて UI に出す
+- 実装: `src/lib/import/parsers/amazon-notebook.ts` の `parseAmazonNotebookLenient`
+
+### ブックマークレット設計の安全性原則
+
+- `innerText` 一択 (`innerHTML` 禁止) — 将来 Amazon が HTML 構造変更しても XSS リスクなし
+- fetch / XHR / sendBeacon ゼロ — 完全ローカル動作、外部送信疑惑が物理的に発生しない
+- Cookie / localStorage / sessionStorage に触らない — 認証情報吸い出し疑惑を排除
+- 起動ドメインチェック (`location.href` の正規表現) — 誤操作で他サイトで実行された場合のフェイルセーフ
+- リクエスト間隔 1.2 秒 — Amazon BOT 検知回避にも寄与
+- 出典: 2026-04-26 CISO レビュー Good Practices 全項
+
 ## 2026-04-25
 
 ### Next.js 16 + 新版 shadcn/ui は base-ui ベース
