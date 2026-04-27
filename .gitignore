@@ -23,6 +23,11 @@ next-env.d.ts
 # Misc
 .DS_Store
 *.pem
+*.key
+*.p12
+credentials.json
+secrets.json
+.credentials.json
 Thumbs.db
 
 # Debug
