@@ -2,11 +2,17 @@
 
 ## 進行中
 
-- なし（Phase 1 機能実装完了、実機検証待ち）
+- なし（Phase 2 取り込み基盤 PR #5 マージ完了、次は実 JSON 入手 + UI 実装）
 
 ## 次セッションで着手
 
-### 🎯 最優先: Phase 1 実機検証
+### 並列可能 (3つのうちどれから着手しても OK)
+
+- **(a) ユーザー実機検証**: `read.amazon.co.jp/notebook` でブックマークレット動作確認 → 1冊スキャンモードで JSON 取得 → `tests/fixtures/amazon-notebook-valid.json` を実データに置き換え PR
+- **(b) `/import` UI 実装** (Supabase 不要): JSON ペースト/ファイルアップロード → `parseAmazonNotebookLenient` でプレビュー → Server Action はモック
+- **(c) Phase 1 実機検証** (Supabase 必要): 下記「Phase 1 実機検証」手順
+
+### 🎯 Phase 1 実機検証
 
 1. **Supabase プロジェクト作成**
    - https://supabase.com で新規プロジェクト
@@ -31,14 +37,18 @@
 
 ### Phase 2 実装（Kindle 一括取り込み, C 主軸）
 
-並行可能 (Supabase 不要のうちに先行できるもの):
+雛形完了 (PR #5, 2026-04-26):
 
-- 取り込み中間表現の型定義 `src/lib/import/types.ts`
-- Webノートブック (read.amazon.co.jp/notebook) HTML 構造の調査メモ
-- ブックマークレット (`public/bookmarklet.js`) — 全書籍を順次開いて JSON で吐き出す
-- HTML/JSON パーサ `src/lib/import/parsers/amazon-notebook.ts`
-- パーサのユニットテスト (Vitest, fixture HTML を `tests/fixtures/`)
+- ✅ 取り込み中間表現の型定義 `src/lib/import/types.ts`
+- ✅ Webノートブック HTML 構造の調査メモ `docs/import/amazon-notebook-investigation.md`
+- ✅ ブックマークレット `public/bookmarklet/amazon-notebook.js`
+- ✅ パーサ `src/lib/import/parsers/amazon-notebook.ts` (Strict / Lenient / 位置抽出)
+- ✅ Vitest 4.1 導入 + ユニットテスト 17件
+
+次セッションで着手:
+
 - 取り込みUI `/import` (JSON ペースト or ファイルアップロード → プレビュー)
+- 実 JSON 取得 → fixture 置き換え
 
 実機検証後 (Supabase 必要):
 
@@ -51,6 +61,17 @@
 - HTML メール添付パーサ (D 経路, 同じ正規化レイヤを通す)
 
 ## 完了
+
+### 2026-04-26
+
+- ✅ 診断士試験タグをスコープ外に整理 (IDEAS.md / plan.md / メモリ)
+- ✅ Phase 2 着手: 取り込み中間表現 + ブックマークレット + 構造調査メモ
+- ✅ CISO レビュー実施、HIGH-1 / MEDIUM-2 / LOW-1〜3 修正 (MEDIUM-1 規約は OSS 公開前タスクへ移管)
+- ✅ パーサ `parseAmazonNotebookStrict` / `parseAmazonNotebookLenient` / `extractLocationNumber` 実装
+- ✅ Vitest 4.1 + @vitest/coverage-v8 導入、`npm test` で 17/17 pass
+- ✅ 合成 fixture 3件 (valid / with-bad-book / malicious-cover)
+- ✅ PR #4 (docs/handover-2026-04-25) マージ
+- ✅ PR #5 (Phase 2 取り込み基盤) マージ
 
 ### 2026-04-25
 

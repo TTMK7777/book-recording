@@ -2,6 +2,32 @@
 
 失敗・教訓・不採用案の記録。
 
+## 2026-04-26
+
+### Fixture の ASIN 桁数を間違えてテスト失敗
+
+- ASIN regex は `^[A-Z0-9]{10}$` (10文字固定) なのに、fixture で "B0VALIDDATA" (11文字) を書いてしまった
+- `parseAmazonNotebookLenient` の「壊れた書籍を skip して 1 件返す」テストが「全件 skip で 0 件」になり失敗
+- **教訓**: regex 入りスキーマのテストでは fixture を書くときに桁数・形式を必ず手で数える。スキーマと fixture を同じ commit で作るので type system が助けてくれない
+
+### docs/handover を base にした多段 PR の運用
+
+- セッション毎に `docs/handover-YYYY-MM-DD` ブランチを切る運用と、機能ブランチ (`feat/...`) を組み合わせる時、機能ブランチの base を `docs/handover-...` にする
+- GitHub は base PR がマージされると自動で派生 PR の base を main に切り替える → きれいな順序保証
+- 注意: 派生 PR の説明に「依存: PR #N (base) を先にマージしてください」と明記
+
+### CISO レビューで MEDIUM-1 を「OSS 公開前タスク」に移管した判断
+
+- 「Amazon 利用規約 DISCLAIMER の追加」は本人 private 利用範囲ではスキップ
+- 公開時に必ず必要 → todo.md に「OSS 公開前の必須対応」セクションを切って残課題化
+- スキップ判断は plan.md の設計決定ログに「いつ・なぜ・どこに移管したか」を記録 → 次回引き継ぎ時に消えない
+
+### 不採用案: `npm audit fix --force` の機械的適用
+
+- moderate 6件の解消提案が `drizzle-kit 0.18` / `next 9` への破壊的ダウングレード
+- audit 警告ベースで自動 fix を回すと一瞬でプロジェクトが壊れる
+- 対応: 上流のメジャーアップを待つ、警告は受容してコミットメッセージに記録
+
 ## 2026-04-25
 
 ### `npx` は deny ルールでブロック → `npm exec` を使う

@@ -41,10 +41,17 @@ src/
 ├── lib/
 │   ├── auth.ts              # requireUserId() ヘルパ
 │   ├── books/               # openBD / Google Books / ISBN 正規化
+│   ├── import/              # Phase 2 取り込みパイプライン
+│   │   ├── types.ts         # 中間表現スキーマ (zod)
+│   │   └── parsers/         # amazon-notebook (Strict / Lenient / 位置抽出)
 │   ├── supabase/            # server / client / middleware
 │   └── utils.ts             # cn ユーティリティ
 └── middleware.ts            # 認証ガード
 drizzle/                     # マイグレーション
+public/bookmarklet/          # Kindle Webノートブック抽出ブックマークレット
+docs/import/                 # 取り込み経路の DOM 構造調査メモ
+tests/                       # Vitest ユニットテスト + fixture
+vitest.config.ts             # Vitest 設定
 ```
 
 ## セットアップ
@@ -82,6 +89,9 @@ npm run dev
 | `npm run start` | プロダクション起動 |
 | `npm run lint` | ESLint |
 | `npm run typecheck` | `tsc --noEmit` |
+| `npm test` | Vitest (1回実行) |
+| `npm run test:watch` | Vitest watch モード |
+| `npm run test:coverage` | Vitest + v8 カバレッジ |
 | `npm run db:generate` | スキーマからマイグレーション生成 |
 | `npm run db:push` | スキーマをDBに直接反映 (開発初期向け) |
 | `npm run db:migrate` | マイグレーションを適用 |
@@ -92,10 +102,10 @@ npm run dev
 | Phase | 内容 | 状態 |
 |-------|------|------|
 | **Phase 1** | ISBN登録 → 書誌取得 → 一覧/詳細 → ★/感想 + Auth | ✅ コード完了 / ⏳ 実機検証待ち |
-| Phase 2 | Kindle ハイライト取り込み (`My Clippings.txt` / Gmail) | 未着手 |
-| Phase 3 | LinkedIn 投稿下書き生成 / 診断士試験タグ / ストリーク | 未着手 |
+| **Phase 2** | Kindle 一括取り込み (Webノートブック C 主軸: 書誌+ハイライト+メモ) | 🟡 雛形完了 / 実 JSON 取得 + UI 残 |
+| Phase 3 | LinkedIn 投稿下書き生成 / ストリーク | 未着手 |
 | Phase 4 | OGP 画像 / 公開ページ / ジャンルレーダー | 未着手 |
-| Phase 5 (任意) | Obsidian / MCP 連携 | 未着手 |
+| Phase 5 (任意) | Obsidian / MCP 連携 / 外向け公開 (D-Gmail 連携) | 未着手 |
 
 ## ライセンス
 
