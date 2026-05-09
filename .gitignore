@@ -58,3 +58,11 @@ yarn-error.log*
 # OS
 .DS_Store
 Thumbs.db
+
+# Secrets / certificates
+.env.local
+*.key
+*.p12
+credentials.json
+.credentials.json
+secrets.json
