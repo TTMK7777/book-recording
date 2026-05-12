@@ -9,10 +9,8 @@ export async function updateSession(request: NextRequest) {
   const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
   const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
 
-  // env 未設定時は middleware を素通しさせる（dev 初期セットアップ時に
-  // /login にループしないようにするための回避策）。
   if (!supabaseUrl || !supabaseAnonKey) {
-    return response;
+    throw new Error("Supabase env vars (NEXT_PUBLIC_SUPABASE_URL / NEXT_PUBLIC_SUPABASE_ANON_KEY) are not set");
   }
 
   const supabase = createServerClient(supabaseUrl, supabaseAnonKey, {
