@@ -50,7 +50,10 @@ export async function fetchFromOpenBd(isbn: string): Promise<BookInfo | null> {
     authors,
     publisher: summary.publisher,
     pageCount: Number.isFinite(pageCount) ? pageCount : undefined,
-    coverUrl: summary.cover || undefined,
+    // Validate scheme to prevent data:/javascript: URI injection (Issue #24 M-3)
+    coverUrl: summary.cover && /^https?:\/\//i.test(summary.cover)
+      ? summary.cover
+      : undefined,
     source: "openbd",
   };
 }
