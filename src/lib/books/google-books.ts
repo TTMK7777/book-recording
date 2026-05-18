@@ -45,7 +45,10 @@ export async function fetchFromGoogleBooks(
     authors: item.authors ?? [],
     publisher: item.publisher,
     pageCount: item.pageCount,
-    coverUrl: cover ? cover.replace(/^http:\/\//, "https://") : undefined,
+    // Validate scheme before http→https upgrade to reject data:/javascript: URIs (Issue #24 M-3)
+    coverUrl: cover && /^https?:\/\//i.test(cover)
+      ? cover.replace(/^http:\/\//, "https://")
+      : undefined,
     source: "google",
   };
 }
