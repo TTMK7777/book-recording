@@ -116,3 +116,17 @@
 - [ ] `README.md` (or `DISCLAIMER.md`) に同等の英文 DISCLAIMER を追加
 - [ ] LICENSE に MIT/Apache-2.0 + 追加 DISCLAIMER 条項を併記
 - [ ] `docs/import/amazon-notebook-investigation.md` にも法務注意書きを冒頭追加
+
+## セキュリティ backlog（2026-05-18 自動記録 / 着手できない要判断項目）
+
+- [ ] **[security-review] #24 M-2**: `/api/books/lookup` 認証必須化（GOOGLE_BOOKS_API_KEY クォータ枯渇攻撃防止）
+  - ファイル: `/api/books/lookup` エンドポイント（約8行 supabase.auth.getUser → 401 返却の修正）
+  - なぜ自動対応不可: 未ログインユーザーの書籍検索を許容するか否かの UX 判断待ち。修正コードは closed PR #26 ブランチ `security/fix-issue-24` に保持済み
+  - 必要な決定/次アクション: 「未ログインでの書籍検索を許可するか」の UX 方針を決定後、ブランチ `security/fix-issue-24` の PR を再オープンしてマージ
+  - 関連 Issue: #24
+
+- [ ] **[security-review] #24 M-1**: postcss CVE（GHSA-qx2v-qp2m-jg99）— Next.js 内蔵バンドルのため external override 不可
+  - ファイル: `package.json`（Next.js バージョン更新が必要）
+  - なぜ自動対応不可: postcss≥8.5.10 を同梱する Next.js へのアップグレードが必要だが、破壊的変更を含むため回帰確認が必要
+  - 必要な決定/次アクション: Next.js を postcss≥8.5.10 を同梱するバージョンへアップグレードし、回帰テスト実施後にマージ
+  - 関連 Issue: #24
