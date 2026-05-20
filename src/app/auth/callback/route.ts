@@ -14,8 +14,24 @@ function sanitizeNext(raw: string | null): string {
   return raw;
 }
 
+/**
+ * H-1 対策: Host Header Injection によるオープンリダイレクトを防止するため、
+ * リクエストの Host ヘッダ由来の `request.nextUrl.origin` ではなく、
+ * 環境変数 `NEXT_PUBLIC_SITE_URL` を正規 origin として使用する。
+ * 未設定時のフォールバックは `login/actions.ts` と同じ `http://localhost:3000` とする。
+ */
+function getTrustedOrigin(request: NextRequest): string {
+  const fromEnv = process.env.NEXT_PUBLIC_SITE_URL?.replace(/\/$/, "");
+  if (fromEnv) return fromEnv;
+  // ローカル開発時のフォールバックのみ。本番では NEXT_PUBLIC_SITE_URL を必ず設定すること。
+  if (process.env.NODE_ENV !== "production") return "http://localhost:3000";
+  // production で未設定の場合は request.nextUrl.origin に落とす (移行期の保険)
+  return request.nextUrl.origin;
+}
+
 export async function GET(request: NextRequest) {
-  const { searchParams, origin } = request.nextUrl;
+  const { searchParams } = request.nextUrl;
+  const origin = getTrustedOrigin(request);
   const code = searchParams.get("code");
   const next = sanitizeNext(searchParams.get("next"));
 
