@@ -94,4 +94,17 @@ describe("auth/callback GET — H-1 Host Header Injection 対策", () => {
     const res = await GET(req);
     expect(res.headers.get("location")).toBe("http://localhost:3000/books");
   });
+
+  it("production 環境で NEXT_PUBLIC_SITE_URL 未設定なら例外を投げる (Host header fallback 削除)", async () => {
+    delete process.env.NEXT_PUBLIC_SITE_URL;
+    // @ts-expect-error allow override for tests
+    process.env.NODE_ENV = "production";
+
+    const GET = await loadHandler();
+    const req = new NextRequest("https://evil.com/auth/callback?code=abc&next=/books", {
+      headers: { host: "evil.com" },
+    });
+
+    await expect(GET(req)).rejects.toThrow(/NEXT_PUBLIC_SITE_URL/);
+  });
 });
