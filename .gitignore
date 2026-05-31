@@ -66,3 +66,8 @@ Thumbs.db
 credentials.json
 .credentials.json
 secrets.json
+
+# Internal development notes (not for public repo)
+memory.md
+knowledge.md
+todo.md
