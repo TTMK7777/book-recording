@@ -1,3 +1,5 @@
+**日本語** | [English](./README.en.md)
+
 # book-recording
 
 読書履歴を有効に管理し、読書モチベを高めるための個人向けWebアプリ。
