@@ -16,36 +16,46 @@
 - **Supabase Auth** (`@supabase/ssr`) — Email magic link
 - **Vercel** デプロイ前提
 
-## 機能（Phase 1 実装済み）
+## 機能
 
 | エンドポイント / ページ | 役割 |
 |------------------------|------|
+| `/` | ランディングページ |
 | `GET /api/books/lookup?isbn=xxx` | openBD → Google Books fallback で書誌取得 |
 | `/login` | Email magic link でログイン |
 | `/auth/callback` | Supabase OAuth callback |
 | `/books` | 自分の本棚一覧（auth required） |
 | `/books/new` | ISBN 入力 → プレビュー → 登録 |
 | `/books/[isbn]` | 書誌＋読書ログ編集（★ / 感想 / 公開トグル / 日付） |
+| `/import` | Kindle My Clippings.txt / Amazon ノートブック JSON から一括取り込み |
 
 ## ディレクトリ構成
 
 ```
 src/
 ├── app/
+│   ├── (app)/               # ナビ付きアプリシェル (route group)
+│   │   ├── books/           # 一覧 / 登録 / 詳細
+│   │   ├── import/          # Kindle ハイライト取り込みページ
+│   │   └── layout.tsx       # sticky ナビヘッダ共通レイアウト
 │   ├── api/books/lookup/    # 書誌ルックアップ API
 │   ├── auth/callback/       # Supabase 認証 callback
-│   ├── books/               # 一覧 / 登録 / 詳細
-│   └── login/               # ログインページ
-├── components/ui/           # shadcn/ui コンポーネント
+│   ├── login/               # ログインページ
+│   └── page.tsx             # ランディングページ
+├── components/
+│   ├── nav-header.tsx       # アプリナビゲーション
+│   └── ui/                  # shadcn/ui コンポーネント
 ├── db/
 │   ├── index.ts             # Drizzle client (Lazy Proxy)
 │   └── schema.ts            # books / reading_logs / highlights
 ├── lib/
 │   ├── auth.ts              # requireUserId() ヘルパ
 │   ├── books/               # openBD / Google Books / ISBN 正規化
-│   ├── import/              # Phase 2 取り込みパイプライン
+│   ├── import/              # 取り込みパイプライン
 │   │   ├── types.ts         # 中間表現スキーマ (zod)
-│   │   └── parsers/         # amazon-notebook (Strict / Lenient / 位置抽出)
+│   │   └── parsers/
+│   │       ├── amazon-notebook.ts   # Amazon ノートブック JSON (Strict / Lenient)
+│   │       └── my-clippings.ts      # Kindle My Clippings.txt (Strict / Lenient)
 │   ├── supabase/            # server / client / middleware
 │   └── utils.ts             # cn ユーティリティ
 └── middleware.ts            # 認証ガード
@@ -103,8 +113,8 @@ npm run dev
 
 | Phase | 内容 | 状態 |
 |-------|------|------|
-| **Phase 1** | ISBN登録 → 書誌取得 → 一覧/詳細 → ★/感想 + Auth | ✅ コード完了 / ⏳ 実機検証待ち |
-| **Phase 2** | Kindle 一括取り込み (Webノートブック C 主軸: 書誌+ハイライト+メモ) | 🟡 雛形完了 / 実 JSON 取得 + UI 残 |
+| **Phase 1** | ISBN登録 → 書誌取得 → 一覧/詳細 → ★/感想 + Auth | ✅ コード完了 / ⏳ 実機検証待ち (Supabase 接続後) |
+| **Phase 2** | Kindle 一括取り込み (`My Clippings.txt` パーサー + `/import` UI) | ✅ UI 完成 / ⏳ DB upsert 実装待ち (Supabase 接続後) |
 | Phase 3 | LinkedIn 投稿下書き生成 / ストリーク | 未着手 |
 | Phase 4 | OGP 画像 / 公開ページ / ジャンルレーダー | 未着手 |
 | Phase 5 (任意) | Obsidian / MCP 連携 / 外向け公開 (D-Gmail 連携) | 未着手 |
