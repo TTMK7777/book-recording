@@ -54,8 +54,21 @@ export default async function BooksPage() {
       </div>
 
       {rows.length === 0 ? (
-        <div className="rounded-lg border border-dashed border-zinc-300 px-6 py-12 text-center text-sm text-zinc-500 dark:border-zinc-700">
-          まだ本が登録されていません。
+        <div className="rounded-xl border border-dashed border-zinc-200 bg-zinc-50/50 px-6 py-16 text-center dark:border-zinc-800 dark:bg-zinc-900/50">
+          <p className="text-sm font-medium text-zinc-700 dark:text-zinc-300">
+            まだ本が登録されていません
+          </p>
+          <p className="mt-1 text-sm text-zinc-500 dark:text-zinc-400">
+            Kindle のハイライトを取り込むか、ISBN で本を登録してみましょう。
+          </p>
+          <div className="mt-6 flex flex-wrap items-center justify-center gap-3">
+            <Button render={<Link href="/import" />} nativeButton={false}>
+              ハイライトを取り込む
+            </Button>
+            <Button render={<Link href="/books/new" />} variant="outline" nativeButton={false}>
+              本を登録する
+            </Button>
+          </div>
         </div>
       ) : (
         <ul className="grid gap-4 sm:grid-cols-2">
